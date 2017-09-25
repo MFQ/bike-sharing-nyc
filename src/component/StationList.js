@@ -1,14 +1,20 @@
 import React, {Component} from "react";
 import Station from "./Station";
 import axios from "axios";
+import _ from "lodash";
 
 class StationList extends Component {
 
-  state = { stations:[] }
+  state = { stations:{} }
 
   componentDidMount(){
     axios.get("https://gbfs.citibikenyc.com/gbfs/en/station_information.json").then( (response) => {
-      this.setState( { stations: response.data.data.stations } );
+      // debugger;
+      let stationStore = {};
+      _.each(response.data.data.stations, (s) => {
+        stationStore[s.station_id] = s
+      });
+      this.setState( {stations:stationStore}  );
       this.liveUpdates();
     });
   }
@@ -22,10 +28,10 @@ class StationList extends Component {
   }
 
   showStations(){
-    if (this.state.stations.length == 0){
+    if (_.isEmpty( this.state.stations )){
       return "Stations are loading ....."
     }else{
-      return this.state.stations.map( (station) => <Station key={station.station_id} {...station} />)
+      return _.keys(this.state.stations).map( (stationKey) => <Station key={stationKey} {...this.state.stations[stationKey]} /> );
     }
 
   }
