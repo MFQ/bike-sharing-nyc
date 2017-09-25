@@ -5,16 +5,17 @@ import _ from "lodash";
 
 class StationList extends Component {
 
-  state = { stations:{} }
+  state = { stations:{}, currentStations: {} }
 
   componentDidMount(){
     axios.get("https://gbfs.citibikenyc.com/gbfs/en/station_information.json").then( (response) => {
-      // debugger;
       let stationStore = {};
-      _.each(response.data.data.stations, (s) => {
-        stationStore[s.station_id] = s
-      });
-      this.setState( {stations:stationStore}  );
+      _.each(response.data.data.stations, (s) => (stationStore[s.station_id] = s) );
+      axios.get(" https://gbfs.citibikenyc.com/gbfs/en/station_status.json").then( (response) => {
+        let currentStationStates = {};
+        _.each(response.data.data.stations, (s) => (currentStationStates[s.station_id] = s) );
+        this.setState( {stations:stationStore, currentStations: currentStationStates } );
+      })
       this.liveUpdates();
     });
   }
@@ -22,19 +23,41 @@ class StationList extends Component {
   liveUpdates(){
     setInterval( () => {
       axios.get(" https://gbfs.citibikenyc.com/gbfs/en/station_status.json").then( (response) => {
-        console.log(response);
+        let currentStationStates = {};
+        _.each(response.data.data.stations, (s) => (currentStationStates[s.station_id] = s) );
+        this.setState( {currentStations: currentStationStates } );
       });
-    }, 30000 );
+    }, 60000 );
   }
 
   showStations(){
     if (_.isEmpty( this.state.stations )){
       return "Stations are loading ....."
     }else{
-      return _.keys(this.state.stations).map( (stationKey) => <Station key={stationKey} {...this.state.stations[stationKey]} /> );
+      return _.keys(this.state.stations).map( (stationKey) => <Station colorStatus={this.colorStatus(stationKey)}  key={stationKey} {...this.state.stations[stationKey]} /> );
     }
-
   }
+
+  colorStatus(stationKey){
+
+    const availableBikes = this.state.currentStations[stationKey].num_bikes_available;
+    const totalBikes = this.state.stations[stationKey].capacity;
+
+    if (totalBikes == 0)
+      return "Red";
+
+    const percentage = ( (availableBikes/totalBikes) * 100)
+    if (percentage == 0)
+      return "Red";
+    else if (percentage < 50) {
+      return "Orange"
+    }else if(percentage < 75) {
+      return "Blue"
+    }else {
+      return "Green"
+    }
+  }
+
 
   render(){
     return(
