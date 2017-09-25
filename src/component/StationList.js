@@ -7,25 +7,29 @@ class StationList extends Component {
 
   state = { stations:{}, currentStations: {} }
 
+  getCurrentstatus(stations){
+    return axios.get(" https://gbfs.citibikenyc.com/gbfs/en/station_status.json").then( (response) => {
+      let currentStationStates = {};
+      _.each(response.data.data.stations, (s) => (currentStationStates[s.station_id] = s) );
+      return Promise.resolve( { currentState: currentStationStates} );
+    });
+  }
+
   componentDidMount(){
     axios.get("https://gbfs.citibikenyc.com/gbfs/en/station_information.json").then( (response) => {
       let stationStore = {};
       _.each(response.data.data.stations, (s) => (stationStore[s.station_id] = s) );
-      axios.get(" https://gbfs.citibikenyc.com/gbfs/en/station_status.json").then( (response) => {
-        let currentStationStates = {};
-        _.each(response.data.data.stations, (s) => (currentStationStates[s.station_id] = s) );
-        this.setState( {stations:stationStore, currentStations: currentStationStates } );
-      })
+      this.getCurrentstatus().then( (result) => {
+        this.setState( {stations:stationStore, currentStations: result.currentState } );
+      });
       this.liveUpdates();
     });
   }
 
   liveUpdates(){
     setInterval( () => {
-      axios.get(" https://gbfs.citibikenyc.com/gbfs/en/station_status.json").then( (response) => {
-        let currentStationStates = {};
-        _.each(response.data.data.stations, (s) => (currentStationStates[s.station_id] = s) );
-        this.setState( {currentStations: currentStationStates } );
+      this.getCurrentstatus().then( (result) => {
+        this.setState( {currentStations: result.currentState} );
       });
     }, 60000 );
   }
@@ -39,7 +43,6 @@ class StationList extends Component {
   }
 
   colorStatus(stationKey){
-
     const availableBikes = this.state.currentStations[stationKey].num_bikes_available;
     const totalBikes = this.state.stations[stationKey].capacity;
 
