@@ -12,7 +12,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-
         <Router>
           <div>
             <ul>
@@ -20,13 +19,11 @@ class App extends Component {
               <li> <Link to="/current">Current</Link> </li>
               <li> <Link to="/history">History</Link> </li>
             </ul>
-
             <Route exact path="/" component={Home}/>
             <Route exact path="/current" component={CurrentView}/>
             <Route exact path="/history" component={HistoryView}/>
           </div>
         </Router>
-
       </div>
     );
   }
