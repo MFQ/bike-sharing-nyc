@@ -2,24 +2,17 @@ import React, {Component} from "react";
 import Station from "./Station";
 import axios from "axios";
 import _ from "lodash";
+import getCurrentStatus from "../utils/pinging.js";
 
 class StationList extends Component {
 
   state = { stations:{}, currentStations: {} }
 
-  getCurrentstatus(stations){
-    return axios.get(" https://gbfs.citibikenyc.com/gbfs/en/station_status.json").then( (response) => {
-      let currentStationStates = {};
-      _.each(response.data.data.stations, (s) => (currentStationStates[s.station_id] = s) );
-      return Promise.resolve( { currentState: currentStationStates} );
-    });
-  }
-
   componentDidMount(){
     axios.get("https://gbfs.citibikenyc.com/gbfs/en/station_information.json").then( (response) => {
       let stationStore = {};
       _.each(response.data.data.stations, (s) => (stationStore[s.station_id] = s) );
-      this.getCurrentstatus().then( (result) => {
+      getCurrentStatus().then( (result) => {
         this.setState( {stations:stationStore, currentStations: result.currentState } );
       });
       this.liveUpdates();
@@ -28,7 +21,7 @@ class StationList extends Component {
 
   liveUpdates(){
     setInterval( () => {
-      this.getCurrentstatus().then( (result) => {
+      getCurrentStatus().then( (result) => {
         this.setState( {currentStations: result.currentState} );
       });
     }, 60000 );
