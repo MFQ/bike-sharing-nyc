@@ -9,7 +9,16 @@ class StationList extends Component {
   componentDidMount(){
     axios.get("https://gbfs.citibikenyc.com/gbfs/en/station_information.json").then( (response) => {
       this.setState( { stations: response.data.data.stations } );
+      this.liveUpdates();
     });
+  }
+
+  liveUpdates(){
+    setInterval( () => {
+      axios.get(" https://gbfs.citibikenyc.com/gbfs/en/station_status.json").then( (response) => {
+        console.log(response);
+      });
+    }, 30000 );
   }
 
   showStations(){
