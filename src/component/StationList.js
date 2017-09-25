@@ -12,11 +12,20 @@ class StationList extends Component {
     });
   }
 
+  showStations(){
+    if (this.state.stations.length == 0){
+      return "Stations are loading ....."
+    }else{
+      return this.state.stations.map( (station) => <Station key={station.station_id} {...station} />)
+    }
+
+  }
+
   render(){
     return(
       <div>
         <h1> Bikes List </h1>
-        { this.state.stations.map( (station) => <Station key={station.station_id} {...station} />) }
+        { this.showStations() }
       </div>
     )
   }
