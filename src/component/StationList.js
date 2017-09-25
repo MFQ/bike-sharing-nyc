@@ -21,9 +21,7 @@ class StationList extends Component {
 
   liveUpdates(){
     setInterval( () => {
-      getCurrentStatus().then( (result) => {
-        this.setState( {currentStations: result.currentState} );
-      });
+      getCurrentStatus().then( (result) =>  this.setState( {currentStations: result.currentState} ) );
     }, 60000 );
   }
 
