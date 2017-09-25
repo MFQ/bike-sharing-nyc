@@ -18,11 +18,9 @@ class Station extends Component{
   render(){
     return(
       <div>
-        Total Bike = {this.props.totalBikes}
-        <br/>
-        Current Avaiable Bikes = {this.props.currentAvaiableBikes}
-        <br/>
-        Color status = { this.colorStatus() }
+        Total Bike = {this.props.capacity}
+        // Current Avaiable Bikes = {this.props.currentAvaiableBikes}
+        // Color status = { this.colorStatus() }
       </div>
     );
   }
