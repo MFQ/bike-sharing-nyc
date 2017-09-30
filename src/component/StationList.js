@@ -4,19 +4,30 @@ import axios from "axios";
 import _ from "lodash";
 import getCurrentStatus from "../utils/pinging.js";
 
+import { connect } from "react-redux";
+import { fetchStaticStations } from "../actions/stationsActions";
+
+const mapStationStateToProps = state => {
+  return { stations: state.stations }
+}
+
 class StationList extends Component {
 
-  state = { stations:{}, currentStations: {} }
+  // state = { stations:{}, currentStations: {} }
 
   componentDidMount(){
-    axios.get("https://gbfs.citibikenyc.com/gbfs/en/station_information.json").then( (response) => {
-      let stationStore = {};
-      _.each(response.data.data.stations, (s) => (stationStore[s.station_id] = s) );
-      getCurrentStatus().then( (result) => {
-        this.setState( {stations:stationStore, currentStations: result.currentState } );
-      });
-      this.liveUpdates();
-    });
+
+    // this.props.dispatch(fetchStaticStations());
+    debugger
+
+    // axios.get("https://gbfs.citibikenyc.com/gbfs/en/station_information.json").then( (response) => {
+    //   let stationStore = {};
+    //   _.each(response.data.data.stations, (s) => (stationStore[s.station_id] = s) );
+    //   getCurrentStatus().then( (result) => {
+    //     this.setState( {stations:stationStore, currentStations: result.currentState } );
+    //   });
+    //   this.liveUpdates();
+    // });
   }
 
   liveUpdates(){
@@ -37,11 +48,11 @@ class StationList extends Component {
     const availableBikes = this.state.currentStations[stationKey].num_bikes_available;
     const totalBikes = this.state.stations[stationKey].capacity;
 
-    if (totalBikes == 0)
+    if (totalBikes === 0)
       return "Red";
 
     const percentage = ( (availableBikes/totalBikes) * 100)
-    if (percentage == 0)
+    if (percentage === 0)
       return "Red";
     else if (percentage < 50) {
       return "Orange"
@@ -57,7 +68,6 @@ class StationList extends Component {
     return(
       <div>
         <h1> Bikes List </h1>
-        { this.showStations() }
       </div>
     )
   }
