@@ -17,16 +17,8 @@ const mapDispatchToProps = (dispatch) => ({ fetchCurrentStations: () => dispatch
 
 class CurrentView extends Component {
 
-  liveUpdates(){
-    const component = this
-    setInterval( () => {
-      component.props.fetchCurrentStations();
-    }, this.props.current.currentStationsState.refreshInterval);
-  }
-
   componentDidMount(){
-    this.props.fetchCurrentStations();
-    this.liveUpdates();
+    this.props.fetchCurrentStations()
   }
 
   displayCurrentStats(){
