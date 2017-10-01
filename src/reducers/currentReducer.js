@@ -5,11 +5,14 @@ export default function reducer(state={
     currentStationsState: {},
     fetching: false,
     fetched: false,
+    refreshInterval: 20000,
     error: null
   }
 }, action) {
-
   switch (action.type) {
+    case "CHANGE_TIME_INTERVAL": {
+      return { ...state, refreshInterval: action.payload };
+    }
     case "FETCH_CURRENT_STATIONS_STATE": {
       return { ...state, fetching: true };
     }
@@ -18,12 +21,10 @@ export default function reducer(state={
         ...state,
         fetching: false,
         fetched: true,
-        stations: arrayTohash(action.payload, "id")
+        currentStationsState: arrayTohash(action.payload, "station_id")
       }
     case "FETCH_CURRENT_STATIONS_STATE_REJECTED":
       return {...state, fetching: false, error: action.payload};
-    case "GET_STATION_BY_ID":
-      return state.stations[action.payload];
   }
 
   return state;
