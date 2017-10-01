@@ -49,7 +49,7 @@ class StationList extends Component {
   }
 
   colorStatus(stationKey){
-    if (this.props.current.currentStationsState === undefined)
+    if (this.props.current.currentStationsState === undefined || this.props.current.currentStationsState[stationKey] === undefined )
       return;
 
     const availableBikes = this.props.current.currentStationsState[stationKey].num_bikes_available;

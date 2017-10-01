@@ -14,7 +14,7 @@ export default function reducer(state={
       return { ...state, refreshInterval: action.payload };
     }
     case "FETCH_CURRENT_STATIONS_STATE": {
-      return { ...state, fetching: true };
+      return { ...state, fetching: true, fetched: false };
     }
     case "FETCH_CURRENT_STATIONS_STATE_FULLFILLED":
       return {

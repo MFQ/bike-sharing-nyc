@@ -1,21 +1,36 @@
 import React, { Component } from "react";
-import getCurrentStatus from "../utils/pinging.js";
+
 import _ from "lodash";
+import { connect } from "react-redux";
+import { fetchCurrentStations } from "../actions/currentStateActions";
+
+const mapStationStateToProps = (store) => ({
+  current: {
+    currentStationsState: store.current.currentStationsState,
+    fetching: store.current.fetching,
+    fetched: store.current.fetched,
+    refreshInterval: store.current.refreshInterval
+  }
+});
+
+const mapDispatchToProps = (dispatch) => ({ fetchCurrentStations: () => dispatch(fetchCurrentStations() ) });
 
 class CurrentView extends Component {
 
-  state = { currentStations: {} }
+  liveUpdates(){
+    const component = this
+    setInterval( () => {
+      component.props.fetchCurrentStations();
+    }, this.props.current.currentStationsState.refreshInterval )
+  }
 
   componentDidMount(){
-    getCurrentStatus().then( (result) => this.setState( {currentStations: result.currentState } ) );
-    setInterval( () => {
-      getCurrentStatus().then( (result) => this.setState( {currentStations: result.currentState } ) );
-    }, 30000);
+    this.props.fetchCurrentStations();
+    this.liveUpdates();
   }
 
   displayCurrentStats(){
-
-    if (_.isEmpty( this.state.currentStations )){
+    if ( ! (this.props.current.fetched) ){
       return (
         <tr>
           <td> loading.... </td>
@@ -23,7 +38,7 @@ class CurrentView extends Component {
       )
     }
     else{
-      const currentStore = this.state.currentStations;
+      const currentStore = this.props.current.currentStationsState;
       return (_.keys(currentStore).map( (stationKey) => {
         return (
           <tr key={stationKey} >
@@ -33,8 +48,6 @@ class CurrentView extends Component {
         )
       }))
     }
-
-
   }
 
   render(){
@@ -56,5 +69,4 @@ class CurrentView extends Component {
   }
 }
 
-
-export default CurrentView;
+export default connect(mapStationStateToProps, mapDispatchToProps)(CurrentView)
