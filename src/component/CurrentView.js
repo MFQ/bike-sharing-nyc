@@ -21,7 +21,7 @@ class CurrentView extends Component {
     const component = this
     setInterval( () => {
       component.props.fetchCurrentStations();
-    }, this.props.current.currentStationsState.refreshInterval )
+    }, this.props.current.currentStationsState.refreshInterval);
   }
 
   componentDidMount(){
@@ -30,7 +30,7 @@ class CurrentView extends Component {
   }
 
   displayCurrentStats(){
-    if ( ! (this.props.current.fetched) ){
+    if ( this.props.current.currentStationsState.currentStationsState !== undefined ){
       return (
         <tr>
           <td> loading.... </td>
