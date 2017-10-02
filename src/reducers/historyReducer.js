@@ -2,7 +2,7 @@ import { arrayTohash } from "../utils/pinging.js"
 
 export default function reducer(state={
   stationHistory:{},
-  timeInterval: 6000 //ms
+  timeInterval: 60000
 }, action) {
   switch (action.type) {
     case "ADD_STATION_HISTORY":

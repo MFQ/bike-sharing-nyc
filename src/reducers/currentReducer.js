@@ -5,7 +5,6 @@ export default function reducer(state={
     currentStationsState: {},
     fetching: false,
     fetched: false,
-    refreshInterval: 20000,
     error: null
   }
 }, action) {

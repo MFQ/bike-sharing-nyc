@@ -8,8 +8,7 @@ const mapStationStateToProps = (store) => ({
   current: {
     currentStationsState: store.current.currentStationsState,
     fetching: store.current.fetching,
-    fetched: store.current.fetched,
-    refreshInterval: store.current.refreshInterval
+    fetched: store.current.fetched
   }
 });
 

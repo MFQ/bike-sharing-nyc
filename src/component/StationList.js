@@ -31,7 +31,7 @@ class StationList extends Component {
     const component = this
     setInterval( () => {
       component.props.fetchCurrentStations();
-    }, this.props.current.currentStationsState.refreshInterval )
+    }, 10000 )
   }
 
   componentDidMount(){
