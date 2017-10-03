@@ -1,11 +1,12 @@
 import React, {Component} from "react";
 import Station from "./Station";
+import MapView from "./MapView";
 import _ from "lodash";
-import getCurrentStatus from "../utils/pinging.js";
 
 import { connect } from "react-redux";
 import { fetchStaticStations } from "../actions/stationsActions";
 import { fetchCurrentStations } from "../actions/currentStateActions";
+
 
 const mapStationStateToProps = (store) => ({
   static: {
@@ -70,15 +71,20 @@ class StationList extends Component {
     }
   }
 
-
   render(){
     return(
-      <div>
-        <h1> Bikes List </h1>
-        { this.showStations() }
-      </div>
+        <MapView
+          isMarkerShown
+          stations={this.props.static.stations}
+          googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcz-D3ZLF_fr3MMpGdZOng8B4sG1YDJyk&v=3.exp&libraries=geometry,drawing,places"
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div style={{ height: `600px` }} />}
+          mapElement={<div style={{ height: `100%` }} />}
+        />
     )
   }
 }
+
+// { this.showStations() }
 
 export default connect(mapStationStateToProps, mapDispatchToProps)(StationList)
