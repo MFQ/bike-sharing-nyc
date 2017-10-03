@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import Station from "./Station";
 import MapView from "./MapView";
 import _ from "lodash";
 
@@ -17,8 +16,7 @@ const mapStationStateToProps = (store) => ({
   current: {
     currentStationsState: store.current.currentStationsState,
     fetching: store.current.fetching,
-    fetched: store.current.fetched,
-    refreshInterval: store.current.refreshInterval
+    fetched: store.current.fetched
   }
 });
 
@@ -28,6 +26,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class StationList extends Component {
+
   liveUpdates(){
     const component = this
     setInterval( () => {
@@ -41,14 +40,6 @@ class StationList extends Component {
     this.liveUpdates();
   }
 
-  showStations(){
-    if ( this.props.static.fetching ){
-      return "Stations are loading .....";
-    }else{
-      return _.keys(this.props.static.stations).map( (stationKey) => <Station colorStatus={ this.colorStatus(stationKey) } key={stationKey} {...this.props.static.stations[stationKey]} /> );
-    }
-  }
-  
   render(){
     return(
         <MapView

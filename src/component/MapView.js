@@ -14,6 +14,8 @@ export class MapView extends Component {
     if(_.isEmpty(this.props.stationsStatus)){
       return "bicycle-store.svg"
     }else{
+      if(this.props.stationsStatus === undefined)
+        return "bicycle-store.svg";
       const stationStatus = this.props.stationsStatus[key];
       const availableBikes = stationStatus.num_bikes_available;
       const totalBikes = this.props.stations[key].capacity;

@@ -3,7 +3,6 @@ import logo from './logo.svg';
 import './App.css';
 
 import HistoryView from "./component/HistoryView";
-import CurrentView from "./component/CurrentView";
 import Home from "./component/Home";
 
 import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
@@ -23,12 +22,10 @@ class App extends Component {
                 </Navbar.Brand>
               </Navbar.Header>
               <Nav>
-                <NavItem eventKey={1} href="/current"> Current </NavItem>
-                <NavItem eventKey={2} href="/history"> History </NavItem>
+                <NavItem eventKey={1} href="/history"> History </NavItem>
               </Nav>
             </Navbar>
             <Route exact path="/" component={Home}/>
-            <Route exact path="/current" component={CurrentView}/>
             <Route exact path="/history" component={HistoryView}/>
           </div>
       </Router>
