@@ -48,34 +48,13 @@ class StationList extends Component {
       return _.keys(this.props.static.stations).map( (stationKey) => <Station colorStatus={ this.colorStatus(stationKey) } key={stationKey} {...this.props.static.stations[stationKey]} /> );
     }
   }
-
-  colorStatus(stationKey){
-    if (this.props.current.currentStationsState === undefined || this.props.current.currentStationsState[stationKey] === undefined )
-      return;
-
-    const availableBikes = this.props.current.currentStationsState[stationKey].num_bikes_available;
-    const totalBikes = this.props.static.stations[stationKey].capacity;
-
-    if (totalBikes === 0)
-      return "Red";
-
-    const percentage = ( (availableBikes/totalBikes) * 100)
-    if (percentage === 0)
-      return "Red";
-    else if (percentage < 50) {
-      return "Orange"
-    }else if(percentage < 75) {
-      return "Blue"
-    }else {
-      return "Green"
-    }
-  }
-
+  
   render(){
     return(
         <MapView
           isMarkerShown
           stations={this.props.static.stations}
+          stationsStatus={this.props.current.currentStationsState}
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcz-D3ZLF_fr3MMpGdZOng8B4sG1YDJyk&v=3.exp&libraries=geometry,drawing,places"
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div style={{ height: `600px` }} />}
@@ -84,7 +63,5 @@ class StationList extends Component {
     )
   }
 }
-
-// { this.showStations() }
 
 export default connect(mapStationStateToProps, mapDispatchToProps)(StationList)
