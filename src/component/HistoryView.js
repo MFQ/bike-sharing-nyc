@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import HistoryItem from "./HistoryItem.js";
 import _ from "lodash";
 import { connect } from "react-redux";
+import Time from 'react-time-format';
+
+import { Grid, Row, Col, ListGroup } from 'react-bootstrap';
 
 import { fetchHistory } from "../actions/historyAction";
 
@@ -26,28 +29,34 @@ class HistoryView extends Component {
   }
 
   showHistory(){
-
     if(_.isEmpty(this.props.stationHistory.stationHistory)){
-        return (<div> Loading ..... </div>);
+        return (<div> Loading ..... </div>)
     }
     else{
       return (
-        <div>
-          <ul>
-            { _.keys(this.props.stationHistory.stationHistory).map( (timeStamp) => <HistoryItem key={timeStamp} timeStamp={timeStamp} /> ) }
-          </ul>
-        </div>
+        _.keys(this.props.stationHistory.stationHistory).map( (timeStamp) => <HistoryItem key={timeStamp} timeStamp={timeStamp} /> )
       )
     }
   }
 
   render(){
     return(
-      <div>
-        { this.showHistory() }
-      </div>
+      <Grid>
+        <Row className="show-grid">
+          <Col xs={3} md={2}>
+          <ListGroup>
+             {this.showHistory()}
+          </ListGroup>
+          </Col>
+          <Col xs={12} md={8}>
+
+          </Col>
+        </Row>
+    </Grid>
     )
   }
 }
 
 export default connect(mapStationStateToProps, mapDispatchToProps)(HistoryView)
+
+// <Time value={parseInt(timeStamp)} format="YYYY-MM-DD hh:mm:ss"/>
