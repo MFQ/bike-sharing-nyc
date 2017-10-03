@@ -18,11 +18,13 @@ class App extends Component {
             <Navbar inverse collapseOnSelect >
               <Navbar.Header>
                 <Navbar.Brand>
-                  <a href="/">Bike Sharing</a>
+                  <Link to={`/`}>Bike Sharing </Link>
                 </Navbar.Brand>
               </Navbar.Header>
               <Nav>
-                <NavItem eventKey={1} href="/history"> History </NavItem>
+                <NavItem eventKey={1}> 
+                  <Link to={`/history`}>History </Link>
+                </NavItem>
               </Nav>
             </Navbar>
             <Route exact path="/" component={Home}/>
