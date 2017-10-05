@@ -8,3 +8,11 @@ export function fetchHistory() {
       .catch( (err) => dispatch({ type: "FETCH_CURRENT_STATIONS_STATE_REJECTED", payload: err }) );
   }
 }
+
+
+export function getStateByTimeStamp( timeStamp ){
+  return {
+      type: "GET_STATE",
+      payload: timeStamp
+  }
+}

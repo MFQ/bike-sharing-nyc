@@ -5,27 +5,47 @@ import { connect } from "react-redux";
 import Time from 'react-time-format';
 
 import { Grid, Row, Col, ListGroup } from 'react-bootstrap';
+import MapView from "./MapView";
 
-import { fetchHistory } from "../actions/historyAction";
+import { fetchHistory, getStateByTimeStamp } from "../actions/historyAction";
+import { fetchStaticStations } from "../actions/stationsActions";
 
 const mapStationStateToProps = (store) => ({
   stationHistory: {
     stationHistory: store.stationHistory.stationHistory,
-    timeInterval: store.stationHistory.timeInterval
+    timeInterval: store.stationHistory.timeInterval,
+    currentState: store.stationHistory.currentState
+  },
+  static: {
+    stations: store.station.stations,
+    fetching: store.station.fetching,
+    fetched: store.station.fetched
   }
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchHistory: () =>  dispatch(fetchHistory() )
+  fetchHistory: () =>  dispatch(fetchHistory()),
+  fetchStaticStations: () =>  dispatch(fetchStaticStations() ),
+  getStateByTimeStamp: (timeStamp) => dispatch( getStateByTimeStamp(timeStamp) )
 });
 
 class HistoryView extends Component {
 
+  constructor(props) {
+    super(props);
+    this.setCurrentState = this.setCurrentState.bind(this);
+  }
+
   componentDidMount(){
+    this.props.fetchStaticStations();
     this.props.fetchHistory();
     setInterval( () => {
       this.props.fetchHistory();
     },this.props.stationHistory.timeInterval )
+  }
+
+  setCurrentState(timeStamp){
+    this.props.getStateByTimeStamp(timeStamp);
   }
 
   showHistory(){
@@ -34,7 +54,7 @@ class HistoryView extends Component {
     }
     else{
       return (
-        _.keys(this.props.stationHistory.stationHistory).map( (timeStamp) => <HistoryItem key={timeStamp} timeStamp={timeStamp} /> )
+        _.keys(this.props.stationHistory.stationHistory).map( (timeStamp) => <HistoryItem setCurrentState={this.setCurrentState} key={timeStamp} timeStamp={timeStamp} /> )
       )
     }
   }
@@ -48,8 +68,16 @@ class HistoryView extends Component {
              {this.showHistory()}
           </ListGroup>
           </Col>
-          <Col xs={12} md={8}>
-
+          <Col xs={12} md={8} style={ {height: "800px"} } >
+            <MapView
+              isMarkerShown
+              stations={this.props.static.stations}
+              stationsStatus={ this.props.stationHistory.currentState }
+              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcz-D3ZLF_fr3MMpGdZOng8B4sG1YDJyk&v=3.exp&libraries=geometry,drawing,places"
+              loadingElement={<div style={{ height: `100%` }} />}
+              containerElement={<div style={{ height: `600px` }} />}
+              mapElement={<div style={{ height: `100%` }} />}
+            />
           </Col>
         </Row>
     </Grid>
@@ -58,5 +86,3 @@ class HistoryView extends Component {
 }
 
 export default connect(mapStationStateToProps, mapDispatchToProps)(HistoryView)
-
-// <Time value={parseInt(timeStamp)} format="YYYY-MM-DD hh:mm:ss"/>
