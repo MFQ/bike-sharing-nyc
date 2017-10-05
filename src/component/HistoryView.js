@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import HistoryItem from "./HistoryItem.js";
 import _ from "lodash";
 import { connect } from "react-redux";
-import Time from 'react-time-format';
 
 import { Grid, Row, Col, ListGroup } from 'react-bootstrap';
 import MapView from "./MapView";

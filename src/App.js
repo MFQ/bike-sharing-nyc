@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import HistoryView from "./component/HistoryView";
 import Home from "./component/Home";
 
-import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Nav, Navbar, NavItem } from 'react-bootstrap';
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -22,7 +21,7 @@ class App extends Component {
                 </Navbar.Brand>
               </Navbar.Header>
               <Nav>
-                <NavItem eventKey={1}> 
+                <NavItem eventKey={1}>
                   <Link to={`/history`}>History </Link>
                 </NavItem>
               </Nav>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import _ from "lodash";
 
 import { compose, withProps, lifecycle } from "recompose";
@@ -80,7 +80,6 @@ const MapWithASearchBox = compose(
         },
 
         showMarkers: (props) => {
-
           const stations = props.stations;
           if (_.isEmpty(stations) ){
             return []
@@ -137,8 +136,5 @@ const MapWithASearchBox = compose(
      {props.showMarkers(props)}
   </GoogleMap>
 );
-
-<MapWithASearchBox />
-
 
 export default MapWithASearchBox

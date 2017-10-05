@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import MapView from "./MapView";
-import _ from "lodash";
 
 import { connect } from "react-redux";
 import { fetchStaticStations } from "../actions/stationsActions";
