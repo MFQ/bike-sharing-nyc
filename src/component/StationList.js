@@ -1,66 +1,53 @@
 import React, {Component} from "react";
-import Station from "./Station";
-import axios from "axios";
+import MapView from "./MapView";
 import _ from "lodash";
-import getCurrentStatus from "../utils/pinging.js";
+
+import { connect } from "react-redux";
+import { fetchStaticStations } from "../actions/stationsActions";
+import { fetchCurrentStations } from "../actions/currentStateActions";
+
+
+const mapStationStateToProps = (store) => ({
+  static: {
+    stations: store.station.stations,
+    fetching: store.station.fetching,
+    fetched: store.station.fetched
+  },
+  current: {
+    currentStationsState: store.current.currentStationsState,
+    fetching: store.current.fetching,
+    fetched: store.current.fetched
+  }
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchStaticStations: () =>  dispatch(fetchStaticStations() ),
+  fetchCurrentStations: () => dispatch(fetchCurrentStations() )
+});
 
 class StationList extends Component {
 
-  state = { stations:{}, currentStations: {} }
+  liveUpdates(){
+    const component = this
+    setInterval( () => {
+      component.props.fetchCurrentStations();
+    }, 10000 )
+  }
 
   componentDidMount(){
-    axios.get("https://gbfs.citibikenyc.com/gbfs/en/station_information.json").then( (response) => {
-      let stationStore = {};
-      _.each(response.data.data.stations, (s) => (stationStore[s.station_id] = s) );
-      getCurrentStatus().then( (result) => {
-        this.setState( {stations:stationStore, currentStations: result.currentState } );
-      });
-      this.liveUpdates();
-    });
+    this.props.fetchStaticStations();
+    this.props.fetchCurrentStations();
+    this.liveUpdates();
   }
-
-  liveUpdates(){
-    setInterval( () => {
-      getCurrentStatus().then( (result) =>  this.setState( {currentStations: result.currentState} ) );
-    }, 60000 );
-  }
-
-  showStations(){
-    if (_.isEmpty( this.state.stations )){
-      return "Stations are loading ....."
-    }else{
-      return _.keys(this.state.stations).map( (stationKey) => <Station colorStatus={this.colorStatus(stationKey)}  key={stationKey} {...this.state.stations[stationKey]} /> );
-    }
-  }
-
-  colorStatus(stationKey){
-    const availableBikes = this.state.currentStations[stationKey].num_bikes_available;
-    const totalBikes = this.state.stations[stationKey].capacity;
-
-    if (totalBikes == 0)
-      return "Red";
-
-    const percentage = ( (availableBikes/totalBikes) * 100)
-    if (percentage == 0)
-      return "Red";
-    else if (percentage < 50) {
-      return "Orange"
-    }else if(percentage < 75) {
-      return "Blue"
-    }else {
-      return "Green"
-    }
-  }
-
 
   render(){
     return(
-      <div>
-        <h1> Bikes List </h1>
-        { this.showStations() }
-      </div>
+        <MapView
+          stations={this.props.static.stations}
+          stationsStatus={this.props.current.currentStationsState}
+        />
     )
   }
 }
 
-export default StationList;
+export default connect(mapStationStateToProps, mapDispatchToProps)(StationList)

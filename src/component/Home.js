@@ -4,7 +4,7 @@ import StationList from "./StationList";
 class Home extends Component {
   render(){
     return (
-      <div>
+      <div style={{"margin-top": "-20px"}} >
         <StationList/>
       </div>
     );

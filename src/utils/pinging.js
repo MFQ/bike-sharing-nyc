@@ -10,5 +10,12 @@ const getCurrentStatus = () => {
   });
 }
 
+export function arrayTohash(array, key){
+  return _.reduce( array, (hash, element) => {
+    hash[element[key]] = element;
+    return hash;
+  }, {});
+}
+
 
 export default getCurrentStatus;
