@@ -16,7 +16,7 @@ class  HistoryItem extends Component {
   render(){
     return(
       <ListGroupItem onClick={this.onClickListener} >
-        <Time value={parseInt(this.props.timeStamp)} format="YYYY-MM-DD hh:mm:ss"/>
+        <Time value={parseInt(this.props.timeStamp, 10)} format="YYYY-MM-DD hh:mm:ss"/>
       </ListGroupItem>
     )
   }
