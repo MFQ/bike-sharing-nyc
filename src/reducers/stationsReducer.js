@@ -20,6 +20,8 @@ export default function reducer(state={
       }
     case "FETCH_STATIONS_REJECTED":
       return {...state, fetching: false, error: action.payload};
+
+    default:
   }
 
   return state;
