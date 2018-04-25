@@ -21,6 +21,8 @@ export default function reducer(state={
         ...state,
         currentState: state.stationHistory[action.payload]
       }
+
+    default:
   }
   return state;
 }
