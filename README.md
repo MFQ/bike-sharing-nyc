@@ -9,3 +9,7 @@ Find availability of bikes at different spots in New York. It is React applicati
   npm install
   npm run start
 ```
+
+## Tech Stack
+
+React | Redux | Axios
