@@ -12,4 +12,4 @@ Find availability of bikes at different spots in New York. It is React applicati
 
 ## Tech Stack
 
-React | Redux | Axios
+React | Redux | Axios 
